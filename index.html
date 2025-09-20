@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matikka Appi – Versio 4</title>
   <meta name="description" content="Harjoittele yhteen-, vähennys- ja kertolaskuja hauskasti!" />
+  <meta name="keywords" content="matikka, laskut, koulu, kertotaulu, harjoittelu, matematiikka, ala-aste, peruskoulu, numerot, laskupeli" />  
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="favicon.png" />
   <link rel="stylesheet" href="style.css" />
@@ -61,9 +62,16 @@
       <div id="multiplicationOptions" class="hidden">
         <label>Valitse kertotaulut:</label>
         <div class="checkbox-grid">
-          ${[...Array(10)].map((_, i) =>
-            `<label><input type="checkbox" value="${i + 1}"> ${i + 1}</label>`
-          ).join("")}
+          <label><input type="checkbox" value="1"> 1</label>
+          <label><input type="checkbox" value="2"> 2</label>
+          <label><input type="checkbox" value="3"> 3</label>
+          <label><input type="checkbox" value="4"> 4</label>
+          <label><input type="checkbox" value="5"> 5</label>
+          <label><input type="checkbox" value="6"> 6</label>
+          <label><input type="checkbox" value="7"> 7</label>
+          <label><input type="checkbox" value="8"> 8</label>
+          <label><input type="checkbox" value="9"> 9</label>
+          <label><input type="checkbox" value="10"> 10</label>
         </div>
         <button type="button" id="toggleAllTables" onclick="toggleAllTables()">Valitse kaikki</button>
       </div>
