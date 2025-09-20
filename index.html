@@ -18,26 +18,33 @@
     <div class="setup">
       <p class="intro">Valitse laskutyyppi, tausta ja nimi. Vastaa 10 kysymykseen! ✏️</p>
 
-      <label for="userName">Nimesi:</label>
-      <input type="text" id="userName" placeholder="Kirjoita nimi" />
+      <div class="form-group">
+        <label for="userName">Nimesi:</label>
+        <input type="text" id="userName" placeholder="Kirjoita nimi" />
+      </div>
 
-      <label for="avatar">Valitse avatar:</label>
-      <select id="avatar">
-        <option>🐱</option>
-        <option>🐶</option>
-        <option>🦊</option>
-        <option>🐸</option>
-        <option>🐵</option>
-        <option>🦁</option>
-      </select>
+      <div class="form-group">
+        <label for="avatar">Valitse avatar:</label>
+        <select id="avatar">
+          <option>🐱</option>
+          <option>🐶</option>
+          <option>🦊</option>
+          <option>🐸</option>
+          <option>🐵</option>
+          <option>🦁</option>
+        </select>
+      </div>
 
-      <label for="themeSelect">Taustakuva:</label>
-      <select id="themeSelect">
-        <option value="light">Vaalea</option>
-        <option value="blue">Sininen</option>
-        <option value="forest">Metsä</option>
-        <option value="space">Avaruus</option>
-      </select>
+      <div class="form-group">
+        <label for="themeSelect">Taustakuva:</label>
+        <select id="themeSelect">
+          <option value="light">Vaalea</option>
+          <option value="blue">Sininen</option>
+          <option value="forest">Metsä</option>
+          <option value="space">Avaruus</option>
+        </select>
+      </div>
+
 
       <div class="form-row">
         <div class="form-group">
@@ -88,8 +95,11 @@
         inputmode="numeric"
         pattern="[0-9]*"
         autocomplete="off"
+        
       />
       <button onclick="checkAnswer()">Tarkista</button>
+      <p id="timer">⏳ 10 s</p>
+      <p id="scoreDisplay">Pisteet: 0</p>
       <p id="feedback"></p>
     </div>
 

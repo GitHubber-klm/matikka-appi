@@ -2,6 +2,7 @@ body {
   font-family: 'Baloo 2', sans-serif;
   margin: 0;
   padding: 0;
+  color: #222; /* lisätty: tumma teksti näkyy kaikilla taustoilla */
 }
 
 /* Teemat */
@@ -27,10 +28,14 @@ body.theme-space {
 
 .container {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 40px auto 0 auto; /* lisätty yläreunaan 40px tilaa */
   padding: 20px;
-  text-align: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  color: #222;
 }
+
 
 /* Lomake-elementit */
 input, select, button {
@@ -39,6 +44,18 @@ input, select, button {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ccc;
+}
+
+/* Napit: kontrastia parannettu hieman */
+button {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #888;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f0f0f0;
 }
 
 /* Rivit lomakkeessa */
@@ -83,3 +100,32 @@ input, select, button {
 .hidden {
   display: none;
 }
+
+#timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#scoreDisplay {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  color: #154360;
+}
+
+#question {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.game {
+  text-align: center;
+}
+
+#answer {
+  display: inline-block;
+  text-align: center;
+}
+
