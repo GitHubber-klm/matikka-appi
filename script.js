@@ -11,6 +11,12 @@ function startGame() {
   currentQuestion = 0;
   correctAnswers = 0;
 
+  // Tallenna valinnat
+  localStorage.setItem("operation", operation);
+  localStorage.setItem("max", max);
+  const selected = getSelectedTables();
+  localStorage.setItem("tables", JSON.stringify(selected));
+
   document.querySelector(".setup").classList.add("hidden");
   document.querySelector(".summary").classList.add("hidden");
   document.querySelector(".game").classList.remove("hidden");
@@ -41,18 +47,11 @@ function nextQuestion() {
   } else {
     a = Math.floor(Math.random() * (max + 1));
     b = Math.floor(Math.random() * (max + 1));
-    if (operation === "sub" && a < b) {
-      [a, b] = [b, a];
-    }
+    if (operation === "sub" && a < b) [a, b] = [b, a];
   }
 
-  let opSymbol = {
-    "add": "+",
-    "sub": "−",
-    "mul": "×"
-  }[operation];
-
-  document.getElementById("question").textContent = `${a} ${opSymbol} ${b} = ?`;
+  const symbol = { add: "+", sub: "−", mul: "×" }[operation];
+  document.getElementById("question").textContent = `${a} ${symbol} ${b} = ?`;
   document.getElementById("answer").value = "";
   document.getElementById("feedback").textContent = "";
   document.getElementById("feedback").className = "";
@@ -64,12 +63,7 @@ function nextQuestion() {
 function checkAnswer() {
   const input = document.getElementById("answer");
   const userAnswer = parseInt(input.value);
-
-  let correct = 0;
-
-  if (operation === "add") correct = a + b;
-  else if (operation === "sub") correct = a - b;
-  else if (operation === "mul") correct = a * b;
+  let correct = operation === "add" ? a + b : operation === "sub" ? a - b : a * b;
 
   const feedback = document.getElementById("feedback");
 
@@ -95,9 +89,7 @@ function checkAnswer() {
 function showSummary() {
   document.querySelector(".game").classList.add("hidden");
   document.querySelector(".summary").classList.remove("hidden");
-
-  const summary = document.getElementById("summaryText");
-  summary.textContent = `Sait ${correctAnswers}/10 oikein! 🥳`;
+  document.getElementById("summaryText").textContent = `Sait ${correctAnswers}/10 oikein! 🎉`;
 }
 
 function goToStart() {
@@ -106,39 +98,37 @@ function goToStart() {
   document.querySelector(".game").classList.add("hidden");
 }
 
-
 function toggleAllTables() {
   const checkboxes = document.querySelectorAll("#multiplicationOptions input[type='checkbox']");
   const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-  checkboxes.forEach(cb => cb.checked = !allChecked);
-
-  document.getElementById("toggleAllTables").textContent = allChecked
-    ? "Valitse kaikki"
-    : "Poista kaikki";
+  checkboxes.forEach(cb => (cb.checked = !allChecked));
+  document.getElementById("toggleAllTables").textContent = allChecked ? "Valitse kaikki" : "Poista kaikki";
 }
 
-
-// ⌨️ Enter = Tarkista
 document.addEventListener("DOMContentLoaded", () => {
   const answerInput = document.getElementById("answer");
-  answerInput.addEventListener("keyup", function (event) {
-    if (event.key === "Enter") {
-      checkAnswer();
-    }
+  answerInput.addEventListener("keyup", (e) => {
+    if (e.key === "Enter") checkAnswer();
   });
 
-
-
-  // Näytä kertotaulun valinta vain jos × on valittu
   const opSelect = document.getElementById("operationSelect");
-  // Tyhjennä kertotaulut aluksi
-  document.querySelectorAll("#multiplicationOptions input[type='checkbox']")
-  .forEach(cb => cb.checked = false);
-
   opSelect.addEventListener("change", () => {
     const show = opSelect.value === "mul";
     document.getElementById("multiplicationOptions").classList.toggle("hidden", !show);
   });
+
+  // Palauta tallennetut valinnat
+  const savedOp = localStorage.getItem("operation");
+  const savedMax = localStorage.getItem("max");
+  const savedTables = JSON.parse(localStorage.getItem("tables") || "[]");
+
+  if (savedOp) document.getElementById("operationSelect").value = savedOp;
+  if (savedMax) document.getElementById("maxNumber").value = savedMax;
+
+  if (savedTables.length > 0) {
+    document.getElementById("multiplicationOptions").classList.remove("hidden");
+    document.querySelectorAll("#multiplicationOptions input[type='checkbox']").forEach(cb => {
+      cb.checked = savedTables.includes(parseInt(cb.value));
+    });
+  }
 });
-
-
