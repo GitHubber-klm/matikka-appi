@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://matikka-appi.netlify.app/sitemap.xml
