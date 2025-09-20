@@ -1,3 +1,9 @@
+body {
+  font-family: 'Baloo 2', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 /* Teemat */
 body.theme-light {
   background-color: #fef5e7;
@@ -19,8 +25,15 @@ body.theme-space {
   background-position: center;
 }
 
-/* Avatar, nimi, jakonappula */
-#userName, #avatar, #themeSelect {
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Lomake-elementit */
+input, select, button {
   font-size: 1.1rem;
   margin: 5px;
   padding: 8px;
@@ -28,8 +41,45 @@ body.theme-space {
   border: 1px solid #ccc;
 }
 
-#shareButton {
-  margin-top: 10px;
-  background-color: #aed6f1;
-  color: #154360;
+/* Rivit lomakkeessa */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-group select {
+  width: 160px;
+}
+
+/* Kertotaulujen ruudukko */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 5px;
+  margin: 10px 0;
+}
+
+/* Vastauspalautteet */
+.correct {
+  color: green;
+  font-weight: bold;
+}
+
+.wrong {
+  color: red;
+  font-weight: bold;
+}
+
+/* Piilotettavat osat */
+.hidden {
+  display: none;
 }
