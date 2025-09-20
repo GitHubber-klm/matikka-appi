@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kertotaulu Harjoittelu</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Kertotaulun harjoittelu</h1>
+
+    <div class="setup">
+      <label for="tableSelect">Valitse kertotaulu:</label>
+      <select id="tableSelect">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <button onclick="startGame()">Aloita</button>
+    </div>
+
+    <div class="game hidden">
+      <p id="question"></p>
+      <input type="number" id="answer" placeholder="Vastauksesi" />
+      <button onclick="checkAnswer()">Tarkista</button>
+      <p id="feedback"></p>
+    </div>
+
+    <div class="summary hidden">
+      <p id="summaryText"></p>
+      <button onclick="startGame()">Yritä uudestaan</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
