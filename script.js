@@ -11,11 +11,17 @@ function startGame() {
   currentQuestion = 0;
   correctAnswers = 0;
 
-  // Tallenna valinnat
-  localStorage.setItem("operation", operation);
-  localStorage.setItem("max", max);
-  const selected = getSelectedTables();
-  localStorage.setItem("tables", JSON.stringify(selected));
+  // Tallenna asetukset
+  const name = document.getElementById("userName").value.trim();
+  const avatar = document.getElementById("avatar").value;
+  const theme = document.getElementById("themeSelect").value;
+
+  localStorage.setItem("userName", name);
+  localStorage.setItem("avatar", avatar);
+  localStorage.setItem("theme", theme);
+
+  // Aseta teema
+  document.body.className = `theme-${theme}`;
 
   document.querySelector(".setup").classList.add("hidden");
   document.querySelector(".summary").classList.add("hidden");
@@ -89,7 +95,20 @@ function checkAnswer() {
 function showSummary() {
   document.querySelector(".game").classList.add("hidden");
   document.querySelector(".summary").classList.remove("hidden");
-  document.getElementById("summaryText").textContent = `Sait ${correctAnswers}/10 oikein! 🎉`;
+
+  const name = localStorage.getItem("userName") || "Pelaaja";
+  const avatar = localStorage.getItem("avatar") || "😊";
+  const summary = document.getElementById("summaryText");
+  summary.textContent = `${avatar} ${name}, sait ${correctAnswers}/10 oikein! 🎉`;
+
+  // Paras tulos
+  const best = parseInt(localStorage.getItem("bestScore") || "0");
+  if (correctAnswers > best) {
+    localStorage.setItem("bestScore", correctAnswers);
+    document.getElementById("highScoreText").textContent = "🎉 Uusi ennätys!";
+  } else {
+    document.getElementById("highScoreText").textContent = `Paras tulos: ${best}/10`;
+  }
 }
 
 function goToStart() {
@@ -105,30 +124,42 @@ function toggleAllTables() {
   document.getElementById("toggleAllTables").textContent = allChecked ? "Valitse kaikki" : "Poista kaikki";
 }
 
+function shareResult() {
+  const name = localStorage.getItem("userName") || "Pelaaja";
+  const score = correctAnswers;
+  const shareText = `${name} sai ${score}/10 oikein matikkapelissä! Kokeile sinäkin!`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: "Matikka Appi",
+      text: shareText,
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    alert("Jakaminen ei ole tuettu tällä laitteella.");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const answerInput = document.getElementById("answer");
   answerInput.addEventListener("keyup", (e) => {
     if (e.key === "Enter") checkAnswer();
   });
 
+  // Näytä kertotaulut vain ×:ssä
   const opSelect = document.getElementById("operationSelect");
   opSelect.addEventListener("change", () => {
     const show = opSelect.value === "mul";
     document.getElementById("multiplicationOptions").classList.toggle("hidden", !show);
   });
 
-  // Palauta tallennetut valinnat
-  const savedOp = localStorage.getItem("operation");
-  const savedMax = localStorage.getItem("max");
-  const savedTables = JSON.parse(localStorage.getItem("tables") || "[]");
+  // Lataa tallennetut asetukset
+  const savedTheme = localStorage.getItem("theme") || "light";
+  const savedName = localStorage.getItem("userName") || "";
+  const savedAvatar = localStorage.getItem("avatar") || "🐱";
 
-  if (savedOp) document.getElementById("operationSelect").value = savedOp;
-  if (savedMax) document.getElementById("maxNumber").value = savedMax;
-
-  if (savedTables.length > 0) {
-    document.getElementById("multiplicationOptions").classList.remove("hidden");
-    document.querySelectorAll("#multiplicationOptions input[type='checkbox']").forEach(cb => {
-      cb.checked = savedTables.includes(parseInt(cb.value));
-    });
-  }
+  document.body.className = `theme-${savedTheme}`;
+  document.getElementById("themeSelect").value = savedTheme;
+  document.getElementById("userName").value = savedName;
+  document.getElementById("avatar").value = savedAvatar;
 });
