@@ -4,12 +4,20 @@ let a = 0;
 let b = 0;
 let currentQuestion = 0;
 let correctAnswers = 0;
+let score = 0;
+let timer = 10;
+let timerInterval = null;
+
+
 
 function startGame() {
   operation = document.getElementById("operationSelect").value;
   max = parseInt(document.getElementById("maxNumber").value);
   currentQuestion = 0;
   correctAnswers = 0;
+  score = 0;
+  document.getElementById("scoreDisplay").textContent = "Pisteet: 0";
+
 
   // Tallenna asetukset
   const name = document.getElementById("userName").value.trim();
@@ -34,6 +42,8 @@ function getSelectedTables() {
   const checkboxes = document.querySelectorAll("#multiplicationOptions input[type='checkbox']:checked");
   return Array.from(checkboxes).map(cb => parseInt(cb.value));
 }
+
+let isLateAnswer = false;
 
 function nextQuestion() {
   if (currentQuestion >= 10) {
@@ -63,10 +73,36 @@ function nextQuestion() {
   document.getElementById("feedback").className = "";
   document.getElementById("answer").focus();
 
+  clearInterval(timerInterval);
+  timer = 10;
+  isLateAnswer = false;
+
+  document.getElementById("timer").textContent = `⏳ ${timer} s`;
+
+  timerInterval = setInterval(() => {
+    timer--;
+    document.getElementById("timer").textContent = `⏳ ${timer} s`;
+
+    if (timer === 0 && !isLateAnswer) {
+      isLateAnswer = true;
+      document.getElementById("feedback").textContent = `⏰ Aika loppui! Oikea vastaus oli ${getCorrectAnswer()}. Vastaa silti – et saa pisteitä, mutta voit saada hyvän vastauksen!`;
+      document.getElementById("feedback").className = "wrong";
+    }
+
+    if (timer <= -5) {
+      clearInterval(timerInterval);
+      document.getElementById("feedback").textContent = `❌ Et vastannut ajoissa.`;
+      document.getElementById("feedback").className = "wrong";
+      setTimeout(nextQuestion, 1500);
+    }
+  }, 1000);
+
   currentQuestion++;
 }
 
+
 function checkAnswer() {
+  clearInterval(timerInterval); // pysäyttää ajastimen heti kun vastataan
   const input = document.getElementById("answer");
   const userAnswer = parseInt(input.value);
   let correct = operation === "add" ? a + b : operation === "sub" ? a - b : a * b;
@@ -81,9 +117,15 @@ function checkAnswer() {
   }
 
   if (userAnswer === correct) {
-    feedback.textContent = "👍 Oikein!";
-    feedback.className = "correct";
+    if (!isLateAnswer) {
+      feedback.textContent = "👍 Oikein!";
+      score += timer;
+    } else {
+      feedback.textContent = "✅ Oikein (ilman pisteitä)";
+    }
     correctAnswers++;
+    feedback.className = "correct";
+    document.getElementById("scoreDisplay").textContent = `Pisteet: ${score}`;
   } else {
     feedback.textContent = `❌ Väärin! Oikea vastaus on ${correct}`;
     feedback.className = "wrong";
@@ -92,6 +134,7 @@ function checkAnswer() {
   setTimeout(nextQuestion, 1500);
 }
 
+
 function showSummary() {
   document.querySelector(".game").classList.add("hidden");
   document.querySelector(".summary").classList.remove("hidden");
@@ -99,16 +142,29 @@ function showSummary() {
   const name = localStorage.getItem("userName") || "Pelaaja";
   const avatar = localStorage.getItem("avatar") || "😊";
   const summary = document.getElementById("summaryText");
-  summary.textContent = `${avatar} ${name}, sait ${correctAnswers}/10 oikein! 🎉`;
+  summary.textContent = `${avatar} ${name}, sait ${correctAnswers}/10 oikein ja keräsit ${score} pistettä! 🎯`;
 
-  // Paras tulos
-  const best = parseInt(localStorage.getItem("bestScore") || "0");
-  if (correctAnswers > best) {
-    localStorage.setItem("bestScore", correctAnswers);
-    document.getElementById("highScoreText").textContent = "🎉 Uusi ennätys!";
-  } else {
-    document.getElementById("highScoreText").textContent = `Paras tulos: ${best}/10`;
-  }
+const currentSettings = {
+  operation: operation,
+  max: max,
+  tables: operation === "mul" ? getSelectedTables() : null,
+};
+
+// Tarkistetaan paras pistemäärä
+const saved = JSON.parse(localStorage.getItem("bestScoreData") || "null");
+
+if (!saved || score > saved.score) {
+  localStorage.setItem("bestScoreData", JSON.stringify({
+    score,
+    settings: currentSettings
+  }));
+  document.getElementById("highScoreText").textContent = "🎉 Uusi ennätys!";
+} else {
+  document.getElementById("highScoreText").textContent =
+    `Paras tulos: ${saved.score} pistettä\n(${formatSettings(saved.settings)})`;
+}
+
+
 }
 
 function goToStart() {
@@ -126,8 +182,9 @@ function toggleAllTables() {
 
 function shareResult() {
   const name = localStorage.getItem("userName") || "Pelaaja";
-  const score = correctAnswers;
-  const shareText = `${name} sai ${score}/10 oikein matikkapelissä! Kokeile sinäkin!`;
+  const scoreText = `${correctAnswers}/10 ja ${score} pistettä`;
+  const shareText = `${name} sai ${scoreText} matikkapelissä! Kokeile sinäkin!`;
+
 
   if (navigator.share) {
     navigator.share({
@@ -163,3 +220,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("userName").value = savedName;
   document.getElementById("avatar").value = savedAvatar;
 });
+
+function formatSettings(s) {
+  let text = "";
+  if (s.operation === "add") text += "Yhteenlasku";
+  else if (s.operation === "sub") text += "Vähennyslasku";
+  else if (s.operation === "mul") text += "Kertolasku";
+
+  text += `, 0–${s.max}`;
+  if (s.operation === "mul" && s.tables) {
+    text += `, taulut: ${s.tables.join(", ")}`;
+  }
+  return text;
+}
