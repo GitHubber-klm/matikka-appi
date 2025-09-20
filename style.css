@@ -1,5 +1,5 @@
 body {
-  background-color: #d0f0f7;
+  background-color: #fef5e7;
   font-family: 'Baloo 2', cursive;
   margin: 0;
   padding: 0;
@@ -20,8 +20,13 @@ body {
 }
 
 h1 {
-  color: #0b7285;
+  color: #eb984e;
   margin-bottom: 20px;
+}
+
+.intro {
+  font-size: 1.2rem;
+  color: #666;
 }
 
 label, select, input, button {
@@ -31,13 +36,13 @@ label, select, input, button {
 
 select, input {
   padding: 10px;
-  border: 2px solid #0b7285;
+  border: 2px solid #eb984e;
   border-radius: 10px;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #38d9a9;
+  background-color: #f5b041;
   color: white;
   border: none;
   border-radius: 10px;
@@ -46,7 +51,7 @@ button {
 }
 
 button:hover {
-  background-color: #20c997;
+  background-color: #eb984e;
 }
 
 .hidden {
@@ -83,4 +88,26 @@ button:hover {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.checkbox-grid label {
+  font-size: 1.1rem;
+}
+
+#toggleAllTables {
+  margin-top: 10px;
+  background-color: #aed6f1;
+  color: #154360;
+  font-weight: bold;
+}
+
+#toggleAllTables:hover {
+  background-color: #85c1e9;
 }

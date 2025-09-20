@@ -1,45 +1,77 @@
 <!DOCTYPE html>
 <html lang="fi">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kertotaulu Harjoittelu</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matikka Appi – Laskuharjoittelua</title>
+    <meta name="description"
+        content="Hauska laskuharjoittelu alakoululaisille. Harjoittele yhteen-, vähennys- ja kertolaskuja helposti!" />
+    <meta name="keywords" content="matikka, laskut, kertotaulu, yhteenlasku, vähennyslasku, koulu, harjoittelu" />
+    <meta name="author" content="Sinun Nimesi" />
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <div class="container">
-    <h1>Kertotaulun harjoittelu</h1>
+    <div class="container">
+        <h1>Matikka Appi</h1>
 
-    <div class="setup">
-      <label for="tableSelect">Valitse kertotaulu:</label>
-      <select id="tableSelect">
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-      </select>
-      <button onclick="startGame()">Aloita</button>
+        <div class="setup">
+            <h2 class="intro">Valitse laskutyyppi ja lukuväli 🎯</h2>
+
+            <label for="operationSelect">Laskutyyppi:</label>
+            <select id="operationSelect">
+                <option value="add">Yhteenlasku (+)</option>
+                <option value="sub">Vähennyslasku (−)</option>
+                <option value="mul">Kertolasku (×)</option>
+            </select>
+
+            <div id="multiplicationOptions" class="hidden">
+                <label>Valitse kertotaulut:</label>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox" value="1" checked> 1</label>
+                    <label><input type="checkbox" value="2" checked> 2</label>
+                    <label><input type="checkbox" value="3" checked> 3</label>
+                    <label><input type="checkbox" value="4" checked> 4</label>
+                    <label><input type="checkbox" value="5" checked> 5</label>
+                    <label><input type="checkbox" value="6" checked> 6</label>
+                    <label><input type="checkbox" value="7" checked> 7</label>
+                    <label><input type="checkbox" value="8" checked> 8</label>
+                    <label><input type="checkbox" value="9" checked> 9</label>
+                    <label><input type="checkbox" value="10" checked> 10</label>
+                    <button type="button" id="toggleAllTables" onclick="toggleAllTables()">Valitse kaikki</button>
+                </div>
+            </div>
+
+
+
+            <label for="maxNumber">Suurin luku:</label>
+            <select id="maxNumber">
+                <option value="10">0–10</option>
+                <option value="20">0–20</option>
+                <option value="100">0–100</option>
+            </select>
+
+            <button onclick="startGame()">Aloita</button>
+        </div>
+
+        <div class="game hidden">
+            <p id="question"></p>
+            <input type="number" id="answer" placeholder="Vastauksesi" />
+            <button onclick="checkAnswer()">Tarkista</button>
+            <p id="feedback"></p>
+        </div>
+
+        <div class="summary hidden">
+            <p id="summaryText"></p>
+            <button onclick="startGame()">Yritä uudestaan</button>
+            <button onclick="goToStart()">Takaisin alkuun</button>
+        </div>
     </div>
 
-    <div class="game hidden">
-      <p id="question"></p>
-      <input type="number" id="answer" placeholder="Vastauksesi" />
-      <button onclick="checkAnswer()">Tarkista</button>
-      <p id="feedback"></p>
-    </div>
-
-    <div class="summary hidden">
-      <p id="summaryText"></p>
-      <button onclick="startGame()">Yritä uudestaan</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
