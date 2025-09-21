@@ -26,7 +26,9 @@ function startGame() {
   localStorage.setItem("avatar", avatar);
   localStorage.setItem("theme", theme);
 
-  document.body.className = `theme-${theme}`;
+
+  updateTheme(theme);
+
 
   document.querySelector(".summary").classList.add("hidden");
   document.querySelector(".game").classList.remove("hidden");
@@ -190,8 +192,15 @@ function shareResult() {
   }
 }
 
+function updateTheme(theme) {
+  document.body.classList.remove("theme-light", "theme-blue", "theme-forest", "theme-space");
+  document.body.classList.add(`theme-${theme}`);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+
   // Varmuuden vuoksi piilotetaan kaikki näkymät paitsi setup alussa
+
   document.querySelector(".game").classList.add("hidden");
   document.querySelector(".summary").classList.add("hidden");
   document.querySelector(".setup").classList.remove("hidden");
@@ -209,14 +218,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
-    document.body.className = `theme-${themeSelect.value}`;
+
+    updateTheme(themeSelect.value);
+
   });
 
   const savedTheme = localStorage.getItem("theme") || "light";
   const savedName = localStorage.getItem("userName") || "";
   const savedAvatar = localStorage.getItem("avatar") || "🐱";
 
-  document.body.className = `theme-${savedTheme}`;
+  updateTheme(savedTheme);
   document.getElementById("themeSelect").value = savedTheme;
   document.getElementById("userName").value = savedName;
   document.getElementById("avatar").value = savedAvatar;
