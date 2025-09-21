@@ -15,15 +15,15 @@
   <div class="container">
     <h1>Matikka-Appi</h1>
 
-    <div class="setup">
+    <div class="setup centered">
       <p class="intro">Valitse laskutyyppi, tausta ja nimi. Vastaa 10 kysymykseen! ✏️</p>
 
-      <div class="form-group">
+      <div class="form-row">
         <label for="userName">Nimesi:</label>
         <input type="text" id="userName" placeholder="Kirjoita nimi" />
       </div>
 
-      <div class="form-group">
+      <div class="form-row">
         <label for="avatar">Valitse avatar:</label>
         <select id="avatar">
           <option>🐱</option>
@@ -35,7 +35,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-row">
         <label for="themeSelect">Taustakuva:</label>
         <select id="themeSelect">
           <option value="light">Vaalea</option>
@@ -44,7 +44,6 @@
           <option value="space">Avaruus</option>
         </select>
       </div>
-
 
       <div class="form-row">
         <div class="form-group">
@@ -83,25 +82,26 @@
         <button type="button" id="toggleAllTables" onclick="toggleAllTables()">Valitse kaikki</button>
       </div>
 
-      <button onclick="startGame()">Aloita</button>
-    </div>
+      <button id="startButton" onclick="startGame()">Aloita</button>
+    </div> <!-- setup päättyy tähän -->
 
     <div class="game hidden">
-      <p id="question"></p>
-      <input
-        type="number"
-        id="answer"
-        placeholder="Vastauksesi"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-        
-      />
-      <button onclick="checkAnswer()">Tarkista</button>
-      <p id="timer">⏳ 10 s</p>
-      <p id="scoreDisplay">Pisteet: 0</p>
-      <p id="feedback"></p>
-    </div>
+      <p id="question" class="question-text"></p>
+      <div class="game-controls">
+        <input
+          type="number"
+          id="answer"
+          placeholder="Vastauksesi"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+        />
+        <button onclick="checkAnswer()">Tarkista</button>
+        <p id="timer">⏳ 10 s</p>
+        <p id="scoreDisplay">Pisteet: 0</p>
+        <p id="feedback"></p>
+      </div>
+    </div> <!-- game päättyy tähän -->
 
     <div class="summary hidden">
       <p id="summaryText"></p>
@@ -109,8 +109,8 @@
       <button onclick="startGame()">Yritä uudestaan</button>
       <button onclick="goToStart()">Takaisin alkuun</button>
       <button onclick="shareResult()">📤 Jaa tulos</button>
-    </div>
-  </div>
+    </div> <!-- summary päättyy tähän -->
+  </div> <!-- container päättyy tähän -->
 
   <script src="script.js"></script>
 </body>
