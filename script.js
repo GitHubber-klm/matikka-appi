@@ -28,7 +28,7 @@ function startGame() {
 
   updateTheme(theme);
 
-  document.querySelector(".summary").classList.add("hidden");
+  document.querySelector(".summary-screen").classList.add("hidden");
   document.querySelector(".game").classList.remove("hidden");
 
   nextQuestion();
@@ -135,7 +135,7 @@ function getCorrectAnswer() {
 
 function showSummary() {
   document.querySelector(".game").classList.add("hidden");
-  document.querySelector(".summary").classList.remove("hidden");
+  document.querySelector(".summary-screen").classList.remove("hidden");
 
   const name = localStorage.getItem("userName") || "Pelaaja";
   const avatar = localStorage.getItem("avatar") || "😊";
@@ -164,7 +164,7 @@ function showSummary() {
 
 function goToStart() {
   document.querySelector(".setup").classList.remove("hidden");
-  document.querySelector(".summary").classList.add("hidden");
+  document.querySelector(".summary-screen").classList.add("hidden");
   document.querySelector(".game").classList.add("hidden");
 }
 
@@ -196,34 +196,52 @@ function updateTheme(theme) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".game").classList.add("hidden");
-  document.querySelector(".summary").classList.add("hidden");
-  document.querySelector(".setup").classList.remove("hidden");
+  const setupEl = document.querySelector(".setup");
+  const gameEl = document.querySelector(".game");
+  const summaryEl = document.querySelector(".summary-screen");
 
-  const answerInput = document.getElementById("answer");
-  answerInput.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") checkAnswer();
-  });
+  if (setupEl && gameEl && summaryEl) {
+    gameEl.classList.add("hidden");
+    summaryEl.classList.add("hidden");
+    setupEl.classList.remove("hidden");
+  }
 
-  const opSelect = document.getElementById("operationSelect");
-  opSelect.addEventListener("change", () => {
-    const show = opSelect.value === "mul";
-    document.getElementById("multiplicationOptions").classList.toggle("hidden", !show);
-  });
-
+  // theme-vaihto
   const themeSelect = document.getElementById("themeSelect");
   themeSelect.addEventListener("change", () => {
     updateTheme(themeSelect.value);
   });
 
   const savedTheme = localStorage.getItem("theme") || "light";
-  const savedName = localStorage.getItem("userName") || "";
-  const savedAvatar = localStorage.getItem("avatar") || "🐱";
-
   updateTheme(savedTheme);
   document.getElementById("themeSelect").value = savedTheme;
-  document.getElementById("userName").value = savedName;
-  document.getElementById("avatar").value = savedAvatar;
+
+  // ✅ Enter-näppäin tarkistaa vastauksen
+  const answerInput = document.getElementById("answer");
+  answerInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      checkAnswer();
+    }
+  });
+
+  // ✅ Näytä/piilota kertotauluvalinnat
+  const operationSelect = document.getElementById("operationSelect");
+  const multOptions = document.getElementById("multiplicationOptions");
+
+  operationSelect.addEventListener("change", () => {
+    if (operationSelect.value === "mul") {
+      multOptions.classList.remove("hidden");
+    } else {
+      multOptions.classList.add("hidden");
+    }
+  });
+
+  // Käynnistä oikealla tilalla kun sivu ladataan
+  if (operationSelect.value === "mul") {
+    multOptions.classList.remove("hidden");
+  } else {
+    multOptions.classList.add("hidden");
+  }
 });
 
 function formatSettings(s) {
