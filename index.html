@@ -103,13 +103,17 @@
       </div>
     </div> <!-- game päättyy tähän -->
 
-    <div class="summary hidden">
-      <p id="summaryText"></p>
-      <p id="highScoreText"></p>
-      <button onclick="startGame()">Yritä uudestaan</button>
-      <button onclick="goToStart()">Takaisin alkuun</button>
-      <button onclick="shareResult()">📤 Jaa tulos</button>
-    </div> <!-- summary päättyy tähän -->
+        <!-- SUMMARY -->
+    <div class="summary-screen hidden">
+      <div class="summary">
+        <p id="summaryText"></p>
+        <p id="highScoreText"></p>
+        <button onclick="startGame()">Yritä uudestaan</button>
+        <button onclick="goToStart()">Takaisin alkuun</button>
+        <button onclick="shareResult()">📤 Jaa tulos</button>
+      </div>
+    </div>
+
   </div> <!-- container päättyy tähän -->
 
   <script src="script.js"></script>
