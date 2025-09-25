@@ -216,6 +216,16 @@ document.addEventListener("DOMContentLoaded", () => {
   updateTheme(savedTheme);
   document.getElementById("themeSelect").value = savedTheme;
 
+  // ✅ Nimi palautetaan ja tallennetaan heti kun sitä muutetaan
+  const userNameInput = document.getElementById("userName");
+  const savedName = localStorage.getItem("userName");
+  if (savedName) {
+    userNameInput.value = savedName;
+  }
+  userNameInput.addEventListener("input", () => {
+    localStorage.setItem("userName", userNameInput.value.trim());
+  });
+
   // ✅ Enter-näppäin tarkistaa vastauksen
   const answerInput = document.getElementById("answer");
   answerInput.addEventListener("keydown", (e) => {
