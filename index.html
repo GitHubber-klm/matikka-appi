@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matikka Appi – Versio 4</title>
+  <title>Matikka Appi – Versio 5</title>
   <meta name="description" content="Harjoittele yhteen-, vähennys- ja kertolaskuja hauskasti!" />
   <meta name="keywords" content="matikka, laskut, koulu, kertotaulu, harjoittelu, matematiikka, ala-aste, peruskoulu, numerot, laskupeli" />  
   <meta name="robots" content="index, follow" />
@@ -13,18 +13,23 @@
 </head>
 <body class="theme-light">
   <div class="container">
-    <h1>Matikka-Appi</h1>
+    <!-- <h1>Matikka-Appi</h1> -->
+    <h1 data-i18n="title">Matikka-Appi</h1>
 
     <div class="setup centered">
-      <p class="intro">Valitse laskutyyppi, tausta ja nimi. Vastaa 10 kysymykseen! ✏️</p>
+      <!-- <p class="intro">Valitse laskutyyppi, tausta ja nimi. Vastaa 10 kysymykseen! ✏️</p> -->
+      <p class="intro" data-i18n="intro">Valitse laskutyyppi, tausta ja nimi. Vastaa 10 kysymykseen! ✏️</p>
 
       <div class="form-row">
-        <label for="userName">Nimesi:</label>
-        <input type="text" id="userName" placeholder="Kirjoita nimi" />
+        <!-- <label for="userName">Nimesi:</label> -->
+        <label for="userName" data-i18n="name">Nimesi:</label>
+        <!-- <input type="text" id="userName" placeholder="Kirjoita nimi" /> -->
+        <input type="text" id="userName" placeholder="Kirjoita nimi" data-i18n-placeholder="namePlaceholder" />
       </div>
 
       <div class="form-row">
-        <label for="avatar">Valitse avatar:</label>
+        <!-- <label for="avatar">Valitse avatar:</label> -->
+        <label for="avatar" data-i18n="avatar">Valitse avatar:</label>
         <select id="avatar">
           <option>🐱</option>
           <option>🐶</option>
@@ -36,27 +41,37 @@
       </div>
 
       <div class="form-row">
-        <label for="themeSelect">Taustakuva:</label>
+        <!-- <label for="themeSelect">Taustakuva:</label> -->
+        <label for="themeSelect" data-i18n="theme">Taustakuva:</label>
         <select id="themeSelect">
-          <option value="light">Vaalea</option>
-          <option value="blue">Sininen</option>
-          <option value="forest">Metsä</option>
-          <option value="space">Avaruus</option>
+          <!-- <option value="light">Vaalea</option> -->
+          <option value="light" data-i18n="themeLight">Vaalea</option>
+          <!-- <option value="blue">Sininen</option> -->
+          <option value="blue" data-i18n="themeBlue">Sininen</option>
+          <!-- <option value="forest">Metsä</option> -->
+          <option value="forest" data-i18n="themeForest">Metsä</option>
+          <!-- <option value="space">Avaruus</option> -->
+          <option value="space" data-i18n="themeSpace">Avaruus</option>
         </select>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="operationSelect">Laskutyyppi:</label>
+          <!-- <label for="operationSelect">Laskutyyppi:</label> -->
+          <label for="operationSelect" data-i18n="operation">Laskutyyppi:</label>
           <select id="operationSelect">
-            <option value="add">Yhteenlasku (+)</option>
-            <option value="sub">Vähennyslasku (−)</option>
-            <option value="mul">Kertolasku (×)</option>
+            <!-- <option value="add">Yhteenlasku (+)</option> -->
+            <option value="add" data-i18n="addition">Yhteenlasku (+)</option>
+            <!-- <option value="sub">Vähennyslasku (−)</option> -->
+            <option value="sub" data-i18n="subtraction">Vähennyslasku (−)</option>
+            <!-- <option value="mul">Kertolasku (×)</option> -->
+            <option value="mul" data-i18n="multiplication">Kertolasku (×)</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="maxNumber">Suurin luku:</label>
+          <!-- <label for="maxNumber">Suurin luku:</label> -->
+          <label for="maxNumber" data-i18n="maxNumber">Suurin luku:</label>
           <select id="maxNumber">
             <option value="10">0–10</option>
             <option value="20">0–20</option>
@@ -66,7 +81,8 @@
       </div>
 
       <div id="multiplicationOptions" class="hidden">
-        <label>Valitse kertotaulut:</label>
+        <!-- <label>Valitse kertotaulut:</label> -->
+        <label data-i18n="chooseTables">Valitse kertotaulut:</label>
         <div class="checkbox-grid">
           <label><input type="checkbox" value="1"> 1</label>
           <label><input type="checkbox" value="2"> 2</label>
@@ -79,42 +95,47 @@
           <label><input type="checkbox" value="9"> 9</label>
           <label><input type="checkbox" value="10"> 10</label>
         </div>
-        <button type="button" id="toggleAllTables" onclick="toggleAllTables()">Valitse kaikki</button>
+        <!-- <button type="button" id="toggleAllTables" onclick="toggleAllTables()">Valitse kaikki</button> -->
+        <button type="button" id="toggleAllTables" onclick="toggleAllTables()" data-i18n="selectAll">Valitse kaikki</button>
       </div>
 
-      <button id="startButton" onclick="startGame()">Aloita</button>
-    </div> <!-- setup päättyy tähän -->
+      <!-- <button id="startButton" onclick="startGame()">Aloita</button> -->
+      <button id="startButton" onclick="startGame()" data-i18n="start">Aloita</button>
+    </div> <!-- setup -->
 
     <div class="game hidden">
       <p id="question" class="question-text"></p>
       <div class="game-controls">
+        <!-- <input type="number" id="answer" placeholder="Vastauksesi" ... /> -->
         <input
           type="number"
           id="answer"
           placeholder="Vastauksesi"
+          data-i18n-placeholder="yourAnswer"
           inputmode="numeric"
           pattern="[0-9]*"
           autocomplete="off"
         />
-        <button onclick="checkAnswer()">Tarkista</button>
+        <!-- <button onclick="checkAnswer()">Tarkista</button> -->
+        <button onclick="checkAnswer()" data-i18n="check">Tarkista</button>
         <p id="timer">⏳ 10 s</p>
-        <p id="scoreDisplay">Pisteet: 0</p>
+        <!-- <p id="scoreDisplay">Pisteet: 0</p> -->
+        <p id="scoreDisplay" data-i18n="scoreLabel">Pisteet: 0</p>
         <p id="feedback"></p>
       </div>
-    </div> <!-- game päättyy tähän -->
+    </div> <!-- game -->
 
-        <!-- SUMMARY -->
-    <div class="summary-screen hidden">
-      <div class="summary">
-        <p id="summaryText"></p>
-        <p id="highScoreText"></p>
-        <button onclick="startGame()">Yritä uudestaan</button>
-        <button onclick="goToStart()">Takaisin alkuun</button>
-        <button onclick="shareResult()">📤 Jaa tulos</button>
-      </div>
-    </div>
-
-  </div> <!-- container päättyy tähän -->
+    <div class="summary hidden">
+      <p id="summaryText"></p>
+      <p id="highScoreText"></p>
+      <!-- <button onclick="startGame()">Yritä uudestaan</button> -->
+      <button onclick="startGame()" data-i18n="retry">Yritä uudestaan</button>
+      <!-- <button onclick="goToStart()">Takaisin alkuun</button> -->
+      <button onclick="goToStart()" data-i18n="backToMenu">Takaisin alkuun</button>
+      <!-- <button onclick="shareResult()">📤 Jaa tulos</button> -->
+      <button onclick="shareResult()" data-i18n="share">📤 Jaa tulos</button>
+    </div> <!-- summary -->
+  </div> <!-- container -->
 
   <script src="script.js"></script>
 </body>
