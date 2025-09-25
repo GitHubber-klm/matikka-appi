@@ -9,6 +9,32 @@ let timer = 10;
 let timerInterval = null;
 let inBonusTime = false;
 
+// i18n
+let currentLang = "fi";
+let i18n = {};
+
+// 🔹 Lataa kielitiedosto (fi.json tai en.json)
+async function loadLanguage(lang) {
+  try {
+    const res = await fetch(`i18n/${lang}.json`);
+    const data = await res.json();
+    i18n = data;
+    currentLang = lang;
+
+    // Päivitä kaikki tekstit
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (i18n[key]) el.textContent = i18n[key];
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (i18n[key]) el.placeholder = i18n[key];
+    });
+  } catch (err) {
+    console.error("Kielen lataus epäonnistui:", err);
+  }
+}
+
 function startGame() {
   document.querySelector(".setup").classList.add("hidden");
   operation = document.getElementById("operationSelect").value;
@@ -16,7 +42,7 @@ function startGame() {
   currentQuestion = 0;
   correctAnswers = 0;
   score = 0;
-  document.getElementById("scoreDisplay").textContent = "Pisteet: 0";
+  document.getElementById("scoreDisplay").textContent = i18n.scoreLabel.replace("{score}", 0);
 
   const name = document.getElementById("userName").value.trim();
   const avatar = document.getElementById("avatar").value;
@@ -48,7 +74,7 @@ function nextQuestion() {
   if (operation === "mul") {
     const selectedTables = getSelectedTables();
     if (selectedTables.length === 0) {
-      alert("Valitse vähintään yksi kertotaulu!");
+      alert(i18n.mustChooseTable);
       goToStart();
       return;
     }
@@ -88,7 +114,8 @@ function nextQuestion() {
       document.getElementById("timer").textContent = `⏳ ${timer} s`;
       if (timer <= 0) {
         clearInterval(timerInterval);
-        document.getElementById("feedback").textContent = `⏰ Aika loppui! Oikea vastaus oli ${getCorrectAnswer()}`;
+        document.getElementById("feedback").textContent =
+          i18n.timeUp.replace("{answer}", getCorrectAnswer());
         document.getElementById("feedback").className = "wrong";
         setTimeout(nextQuestion, 1500);
       }
@@ -106,23 +133,24 @@ function checkAnswer() {
   const feedback = document.getElementById("feedback");
 
   if (isNaN(userAnswer)) {
-    feedback.textContent = "⚠️ Kirjoita vastaus!";
+    feedback.textContent = i18n.mustAnswer;
     feedback.className = "wrong";
     input.focus();
     return;
   }
 
   if (userAnswer === correct) {
-    feedback.textContent = "👍 Oikein!";
+    feedback.textContent = i18n.correct;
     feedback.className = "correct";
     correctAnswers++;
 
     if (!inBonusTime) {
       score += timer;
     }
-    document.getElementById("scoreDisplay").textContent = `Pisteet: ${score}`;
+    document.getElementById("scoreDisplay").textContent =
+      i18n.scoreLabel.replace("{score}", score);
   } else {
-    feedback.textContent = `❌ Väärin! Oikea vastaus on ${correct}`;
+    feedback.textContent = i18n.wrong.replace("{answer}", correct);
     feedback.className = "wrong";
   }
 
@@ -140,7 +168,12 @@ function showSummary() {
   const name = localStorage.getItem("userName") || "Pelaaja";
   const avatar = localStorage.getItem("avatar") || "😊";
   const summary = document.getElementById("summaryText");
-  summary.textContent = `${avatar} ${name}, sait ${correctAnswers}/10 oikein ja keräsit ${score} pistettä! 🎯`;
+
+  summary.textContent = i18n.summary
+    .replace("{avatar}", avatar)
+    .replace("{name}", name)
+    .replace("{correct}", correctAnswers)
+    .replace("{score}", score);
 
   const currentSettings = {
     operation: operation,
@@ -155,10 +188,11 @@ function showSummary() {
       score,
       settings: currentSettings
     }));
-    document.getElementById("highScoreText").textContent = "🎉 Uusi ennätys!";
+    document.getElementById("highScoreText").textContent = i18n.newRecord;
   } else {
     document.getElementById("highScoreText").textContent =
-      `Paras tulos: ${saved.score} pistettä\n(${formatSettings(saved.settings)})`;
+      i18n.bestScore.replace("{score}", saved.score)
+      + `\n(${formatSettings(saved.settings)})`;
   }
 }
 
@@ -171,13 +205,23 @@ function goToStart() {
 function toggleAllTables() {
   const checkboxes = document.querySelectorAll("#multiplicationOptions input[type='checkbox']");
   const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
   checkboxes.forEach(cb => (cb.checked = !allChecked));
-  document.getElementById("toggleAllTables").textContent = allChecked ? "Valitse kaikki" : "Poista kaikki";
+
+  const toggleBtn = document.getElementById("toggleAllTables");
+  if (allChecked) {
+    toggleBtn.textContent = i18n.selectAll;
+  } else {
+    toggleBtn.textContent = i18n.deselectAll;
+  }
 }
 
 function shareResult() {
   const name = localStorage.getItem("userName") || "Pelaaja";
-  const shareText = `${name} sai ${correctAnswers}/10 oikein ja ${score} pistettä matikkapelissä! Kokeile sinäkin!`;
+  const shareText = i18n.shareText
+    .replace("{name}", name)
+    .replace("{correct}", correctAnswers)
+    .replace("{score}", score);
 
   if (navigator.share) {
     navigator.share({
@@ -195,6 +239,7 @@ function updateTheme(theme) {
   document.body.classList.add(`theme-${theme}`);
 }
 
+// -------------------- DOMContentLoaded --------------------
 document.addEventListener("DOMContentLoaded", () => {
   const setupEl = document.querySelector(".setup");
   const gameEl = document.querySelector(".game");
@@ -206,27 +251,15 @@ document.addEventListener("DOMContentLoaded", () => {
     setupEl.classList.remove("hidden");
   }
 
-  // theme-vaihto
-  const themeSelect = document.getElementById("themeSelect");
-  themeSelect.addEventListener("change", () => {
-    updateTheme(themeSelect.value);
-  });
-
-  const savedTheme = localStorage.getItem("theme") || "light";
-  updateTheme(savedTheme);
-  document.getElementById("themeSelect").value = savedTheme;
-
-  // ✅ Nimi palautetaan ja tallennetaan heti kun sitä muutetaan
+  // ✅ Nimi tallentuu localStorageen heti
   const userNameInput = document.getElementById("userName");
-  const savedName = localStorage.getItem("userName");
-  if (savedName) {
-    userNameInput.value = savedName;
-  }
+  const savedName = localStorage.getItem("userName") || "";
+  userNameInput.value = savedName;
   userNameInput.addEventListener("input", () => {
     localStorage.setItem("userName", userNameInput.value.trim());
   });
 
-  // ✅ Enter-näppäin tarkistaa vastauksen
+  // ✅ Enter-näppäin
   const answerInput = document.getElementById("answer");
   answerInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -237,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ Näytä/piilota kertotauluvalinnat
   const operationSelect = document.getElementById("operationSelect");
   const multOptions = document.getElementById("multiplicationOptions");
-
   operationSelect.addEventListener("change", () => {
     if (operationSelect.value === "mul") {
       multOptions.classList.remove("hidden");
@@ -245,24 +277,41 @@ document.addEventListener("DOMContentLoaded", () => {
       multOptions.classList.add("hidden");
     }
   });
-
-  // Käynnistä oikealla tilalla kun sivu ladataan
   if (operationSelect.value === "mul") {
     multOptions.classList.remove("hidden");
   } else {
     multOptions.classList.add("hidden");
   }
+
+  // ✅ Teema
+  const themeSelect = document.getElementById("themeSelect");
+  themeSelect.addEventListener("change", () => {
+    updateTheme(themeSelect.value);
+  });
+  const savedTheme = localStorage.getItem("theme") || "light";
+  updateTheme(savedTheme);
+  document.getElementById("themeSelect").value = savedTheme;
+
+  // ✅ Kieli
+  const savedLang = localStorage.getItem("lang") || "fi";
+  document.getElementById("langSelect").value = savedLang;
+  loadLanguage(savedLang);
+  document.getElementById("langSelect").addEventListener("change", (e) => {
+    const newLang = e.target.value;
+    loadLanguage(newLang);
+    localStorage.setItem("lang", newLang);
+  });
 });
 
 function formatSettings(s) {
   let text = "";
-  if (s.operation === "add") text += "Yhteenlasku";
-  else if (s.operation === "sub") text += "Vähennyslasku";
-  else if (s.operation === "mul") text += "Kertolasku";
+  if (s.operation === "add") text += currentLang === "fi" ? "Yhteenlasku" : "Addition";
+  else if (s.operation === "sub") text += currentLang === "fi" ? "Vähennyslasku" : "Subtraction";
+  else if (s.operation === "mul") text += currentLang === "fi" ? "Kertolasku" : "Multiplication";
 
   text += `, 0–${s.max}`;
   if (s.operation === "mul" && s.tables) {
-    text += `, taulut: ${s.tables.join(", ")}`;
+    text += currentLang === "fi" ? `, taulut: ${s.tables.join(", ")}` : `, tables: ${s.tables.join(", ")}`;
   }
   return text;
 }
